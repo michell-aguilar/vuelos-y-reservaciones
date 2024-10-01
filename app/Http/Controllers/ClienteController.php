@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Avion;
-use App\Models\Aerolinea;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -12,95 +11,73 @@ class ClienteController extends Controller
     {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
-        $cliente=Cliente::with('Cliente')
-            ->select('id_cliente','nombre','correo','telefono','fecha_registro')
-            ->orderBy('id_avion','desc')
-            ->get();
-            
-            return view('aviones.show',['avion' => $avion]);
-        
+        $clientes = Cliente::orderBy('id_cliente', 'desc')->get();
+        return view('clientes.show', ['clientes' => $clientes]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('aviones.create',['aerolineas' => Aerolinea::all()]);
-        
+        return view('clientes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate ([
-            'id_aerolineas'=> 'required',
-                'modelo'=> 'required',
-                'capacidad'=> 'required',
-             ]);
-             
-        $avion = new Avion();
+        $request->validate([
+            'nombre' => 'required',
+            'correo' => 'required|email',
+            'telefono' => 'required',
+            'fecha_registro' => 'required|date',
+        ]);
 
-        $avion->id_aerolineas=$request->input('id_aerolineas');$avion->modelo=$request->input('modelo');$avion->capacidad=$request->input('capacidad');
-
-
-       $avion->save();
-       return redirect("aviones");
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show()
-    {
-        return view('aviones.show');
+        $cliente = new Cliente();
+        $cliente->nombre = $request->input('nombre');
+        $cliente->correo = $request->input('correo');
+        $cliente->telefono = $request->input('telefono');
+        $cliente->fecha_registro = $request->input('fecha_registro');
         
+        $cliente->save();
+        return redirect("clientes");
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id_avion)
+    public function show($id_cliente)
     {
-        $avion = Avion::find($id_avion);
-        return view('aviones.edit', ['avion'=>$avion,'aerolineas' => Aerolinea::all()]);
+        $cliente = Cliente::find($id_cliente);
+        return view('clientes.show', ['cliente' => $cliente]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id_avion)
+    public function edit($id_cliente)
     {
-        $request->validate ([
-            'id_aerolineas'=> 'required',
-                'modelo'=> 'required',
-                'capacidad'=> 'required',
-             ]);
-             
-        $avion = Avion::find($id_avion);
-
-        $avion->id_aerolineas=$request->input('id_aerolineas');$avion->modelo=$request->input('modelo');$avion->capacidad=$request->input('capacidad');
-
-
-       $avion->save();
-       return redirect("aviones");
+        $cliente = Cliente::find($id_cliente);
+        return view('clientes.edit', ['cliente' => $cliente]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id_avion)
+    public function update(Request $request, $id_cliente)
     {
-        $avion= Avion::find($id_avion);
-        $avion->delete();
+        $request->validate([
+            'nombre' => 'required',
+            'correo' => 'required|email',
+            'telefono' => 'required',
+            'fecha_registro' => 'required|date',
+        ]);
+
+        $cliente = Cliente::find($id_cliente);
+        $cliente->nombre = $request->input('nombre');
+        $cliente->correo = $request->input('correo');
+        $cliente->telefono = $request->input('telefono');
+        $cliente->fecha_registro = $request->input('fecha_registro');
         
-        return redirect("aviones");
+        $cliente->save();
+        return redirect("clientes");
+    }
+
+    public function destroy($id_cliente)
+    {
+        $cliente = Cliente::find($id_cliente);
+        $cliente->delete();
+        
+        return redirect("clientes");
     }
 }

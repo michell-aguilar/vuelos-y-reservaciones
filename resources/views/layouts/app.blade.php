@@ -109,7 +109,7 @@
                                 </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/pago"><i class="bi bi-cash-coin" style="font-size: 2rem; color: rgb(255, 0, 212)"></i> <h5>Pagos</h5></a>
+                                      <a class="nav-link" href="/pagos"><i class="bi bi-cash-coin" style="font-size: 2rem; color: rgb(255, 0, 212)"></i> <h5>Pagos</h5></a>
                                     </li>
                                   </div>
                                 </div>

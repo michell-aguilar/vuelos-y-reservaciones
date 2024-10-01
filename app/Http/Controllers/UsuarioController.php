@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
@@ -15,9 +16,10 @@ class UsuarioController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $usuarios = Usuario::select('id_usuario', 'nombre', 'correo', 'teléfono', 'fecha_registro')
+        $usuarios = DB::table('usuarios')
+        ->select('id_usuario', 'nombre', 'correo', 'telefono', 'fecha_registro')
             ->orderBy('id_usuario', 'desc')
             ->get();
 

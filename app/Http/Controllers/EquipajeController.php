@@ -12,55 +12,89 @@ class EquipajeController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
     {
-        $equipajes = Equipaje::all();
+        $equipajes = Equipaje::orderBy('id_equipaje', 'desc')->get();
         return view('equipajes.show', ['equipajes' => $equipajes]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view('equipajes.create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'descripcion' => 'required',
-            // otros campos de validación
+            'id_cliente' => 'required',
+            'peso' => 'required|numeric',
+            'descripcion' => 'nullable|string',
         ]);
 
-        Equipaje::create($request->all());
-        return redirect('equipajes');
+        $equipaje = new Equipaje();
+        $equipaje->id_cliente = $request->input('id_cliente');
+        $equipaje->peso = $request->input('peso');
+        $equipaje->descripcion = $request->input('descripcion');
+
+        $equipaje->save();
+        return redirect("equipajes");
     }
 
-    public function show(Equipaje $equipaje)
+    /**
+     * Display the specified resource.
+     */
+    public function show($id_equipaje)
     {
-        return view('equipajes.show_single', ['equipaje' => $equipaje]);
+        $equipaje = Equipaje::find($id_equipaje);
+        return view('equipajes.show', ['equipaje' => $equipaje]);
     }
 
-    public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id_equipaje)
     {
-        $equipaje = Equipaje::find($id);
+        $equipaje = Equipaje::find($id_equipaje);
         return view('equipajes.edit', ['equipaje' => $equipaje]);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id_equipaje)
     {
         $request->validate([
-            'descripcion' => 'required',
-            // otros campos de validación
+            'id_cliente' => 'required',
+            'peso' => 'required|numeric',
+            'descripcion' => 'nullable|string',
         ]);
 
-        $equipaje = Equipaje::find($id);
-        $equipaje->update($request->all());
-        return redirect('equipajes');
+        $equipaje = Equipaje::find($id_equipaje);
+        $equipaje->id_cliente = $request->input('id_cliente');
+        $equipaje->peso = $request->input('peso');
+        $equipaje->descripcion = $request->input('descripcion');
+
+        $equipaje->save();
+        return redirect("equipajes");
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id_equipaje)
     {
-        $equipaje = Equipaje::find($id);
+        $equipaje = Equipaje::find($id_equipaje);
         $equipaje->delete();
-        return redirect('equipajes');
+
+        return redirect("equipajes");
     }
 }
