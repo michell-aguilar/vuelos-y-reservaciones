@@ -12,57 +12,97 @@ class UsuarioController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
     {
-        $usuarios = Usuario::all();
+        $usuarios = Usuario::select('id_usuario', 'nombre', 'correo', 'teléfono', 'fecha_registro')
+            ->orderBy('id_usuario', 'desc')
+            ->get();
+
         return view('usuarios.show', ['usuarios' => $usuarios]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view('usuarios.create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
             'nombre' => 'required',
             'correo' => 'required|email',
-            // otros campos de validación
+            'teléfono' => 'required',
         ]);
 
-        Usuario::create($request->all());
-        return redirect('usuarios');
+        $usuario = new Usuario();
+
+        $usuario->nombre = $request->input('nombre');
+        $usuario->correo = $request->input('correo');
+        $usuario->teléfono = $request->input('teléfono');
+        $usuario->fecha_registro = now();
+
+        $usuario->save();
+
+        return redirect("usuarios");
     }
 
-    public function show(Usuario $usuario)
+    /**
+     * Display the specified resource.
+     */
+    public function show($id_usuario)
     {
-        return view('usuarios.show_single', ['usuario' => $usuario]);
+        $usuario = Usuario::find($id_usuario);
+        return view('usuarios.show', ['usuario' => $usuario]);
     }
 
-    public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id_usuario)
     {
-        $usuario = Usuario::find($id);
+        $usuario = Usuario::find($id_usuario);
         return view('usuarios.edit', ['usuario' => $usuario]);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id_usuario)
     {
         $request->validate([
             'nombre' => 'required',
             'correo' => 'required|email',
-            // otros campos de validación
+            'teléfono' => 'required',
         ]);
 
-        $usuario = Usuario::find($id);
-        $usuario->update($request->all());
-        return redirect('usuarios');
+        $usuario = Usuario::find($id_usuario);
+
+        $usuario->nombre = $request->input('nombre');
+        $usuario->correo = $request->input('correo');
+        $usuario->teléfono = $request->input('teléfono');
+
+        $usuario->save();
+
+        return redirect("usuarios");
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id_usuario)
     {
-        $usuario = Usuario::find($id);
+        $usuario = Usuario::find($id_usuario);
         $usuario->delete();
-        return redirect('usuarios');
+
+        return redirect("usuarios");
     }
 }

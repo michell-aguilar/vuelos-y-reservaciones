@@ -73,43 +73,43 @@
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/usuarios"><i class="bi bi-people-fill" style="font-size: 2rem; color: rgb(255, 0, 153)"></i><h5>Usuarios</h5></a>
+                                      <a class="nav-link" href="/usuarios"><i class="bi bi-people" style="font-size: 2rem; color: rgb(255, 0, 153)"></i><h5>Usuarios</h5></a>
                                     </li>
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/clientes"><i class="bi bi-person-vcard-fill" style="font-size: 2rem; color: rgb(255, 0, 183)"></i><h5>Clientes</h5></a>
+                                      <a class="nav-link" href="/clientes"><i class="bi bi-person-standing" style="font-size: 2rem; color: rgb(255, 0, 183)"></i><h5>Clientes</h5></a>
                                     </li>
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/vuelos"><i class="bi bi-box-seam-fill" style="font-size: 2rem; color: rgb(255, 0, 170)"></i><h5>Vuelos</h5></a>
+                                      <a class="nav-link" href="/vuelos"><i class="bi bi-airplane-engines" style="font-size: 2rem; color: rgb(255, 0, 170)"></i><h5>Vuelos</h5></a>
                                     </li>
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/aerolineas"><i class="bi bi-caret-up-square-fill" style="font-size: 2rem; color: rgb(255, 0, 204)"></i><h5>Aerolineas</h5></a>
+                                      <a class="nav-link" href="/aerolineas"><i class="bi bi-airplane-fill" style="font-size: 2rem; color: rgb(255, 0, 204)"></i><h5>Aerolineas</h5></a>
                                     </li>
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/aviones"><i class="bi bi-caret-down-square-fill" style="font-size: 2rem; color: rgb(255, 0, 136)"></i><h5>Aviones</h5></a>
+                                      <a class="nav-link" href="/aviones"><i class="bi bi-airplane" style="font-size: 2rem; color: rgb(255, 0, 136)"></i><h5>Aviones</h5></a>
                                     </li>
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/equipajes"> <i class="bi bi-piggy-bank-fill" style="font-size: 2rem; color: rgb(255, 0, 187)"></i><h5>Equipajes</h5></a>
+                                      <a class="nav-link" href="/equipajes"> <i class="bi bi-luggage" style="font-size: 2rem; color: rgb(255, 0, 187)"></i><h5>Equipajes</h5></a>
                                     </li>
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/reservaciones"> <i class="bi bi-wrench-adjustable-circle-fill" style="font-size: 2rem; color: rgb(255, 0, 153)"></i> <h5>Reservaciones</h5></a>
+                                      <a class="nav-link" href="/reservaciones"><i class="bi bi-card-checklist" style="font-size: 2rem; color: rgb(255, 0, 153)"></i> <h5>Reservaciones</h5></a>
                                     </li>
                                   </div>
                                 </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/pago"> <i class="bi bi-wrench-adjustable-circle-fill" style="font-size: 2rem; color: rgb(255, 0, 212)"></i> <h5>Pagos</h5></a>
+                                      <a class="nav-link" href="/pago"><i class="bi bi-cash-coin" style="font-size: 2rem; color: rgb(255, 0, 212)"></i> <h5>Pagos</h5></a>
                                     </li>
                                   </div>
                                 </div>
@@ -117,7 +117,7 @@
                                 
                                   <hr>
                                   <li class="dropdown">
-                                    <i class="bi bi-person-fill-check"  style="font-size: 2.5rem; color: rgb(255, 0, 43)"></i>
+                                    <i class="bi bi-person-fill-check"  style="font-size: 2.5rem; color: rgb(255, 0, 111)"></i>
                                     <h6 class="dropdown-header">Cuenta</h6>
                                     <a id="navbarDropdown" class="dropdown-item" href="#" role="button" aria-haspopup="false" aria-expanded="true">
                                        <h6><b> {{ Auth::user()->name }}</b></h6>

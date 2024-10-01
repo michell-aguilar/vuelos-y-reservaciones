@@ -1,87 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Usuarios;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class UsuariosController extends Controller
+class Usuario extends Model
 {
-    public function __construct()
+    use HasFactory;
+    protected $table = 'usuarios';
+    protected $primaryKey = 'id_usuario';
+    protected $fillable = ['nombre','correo','telefono','fecha_registro'];
+
+  
+    public function Reservacion()
     {
-        $this->middleware('auth');
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $usuarios = DB::table('users')
-        ->get();
-
-        return view('usuarios.show', ['usuarios' => $usuarios]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Usuarios $usuarios)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        $usuarios = Usuarios::find($id);
-        return view('usuarios.update', ['usuarios'=> $usuarios]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        $request-> validate([
-            'name' => 'required',
-            'email'  => 'required',
-            ]);
-
-            $usuarios = Usuarios::find($id);
-
-            $usuarios->name=$request->input('name'); 
-            $usuarios->email=$request->input('email');       
-            $usuarios->save();
-            return redirect("usuarios");
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        $usuarios= Usuarios::find($id);
-        $usuarios->delete();
-        
-        return redirect("usuarios");
+        return $this->belongsTo(Reservacion::class);
     }
 }

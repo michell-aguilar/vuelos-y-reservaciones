@@ -2,65 +2,106 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Aerolineas;
+use App\Models\Aerolinea;
+use App\Models\Clientes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class AerolineasController extends Controller
+
+class AerolineaController extends Controller
 {
-    public function __construct()
-    {
+        public function __construct()
+        {
         $this->middleware('auth');
-    }
-
-    public function index()
+        }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
     {
-        $aerolineas = Aerolineas::all();
-        return view('aerolineas.show', ['aerolineas' => $aerolineas]);
+        $aeroli=DB::table('aerolinea')
+            ->select(
+                'id_aerolinea','nombre','pais','direccion_de_ubicacion')
+            ->orderBy('id','desc')
+            ->get();
+        
+        return view('aerolineas.show',['aeroli' => $aeroli]);
+        
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('aerolineas.create');
+        return view('aerolineas.create',['aerolineas' => Aerolinea::all()]);
+        
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required',
-            // otros campos de validación
-        ]);
+        $request->validate ([
+            'nombre'=> 'required',
+                'pais'=> 'required',
+                'direccion_de_ubicacion'=> 'required',
+             ]);
+             
+        $aeroli = new Aerolinea();
 
-        Aerolineas::create($request->all());
-        return redirect('aerolineas');
+        $aeroli->nombre=$request->input('nombre');$aeroli->pais=$request->input('pais');$aeroli->direccion_de_ubicacion=$request->input('direccion_de_ubicacion');
+
+       $aeroli->save();
+       return redirect("aerolineas");
     }
 
-    public function show(Aerolineas $aerolineas)
+    /**
+     * Display the specified resource.
+     */
+    public function show()
     {
-        return view('aerolineas.show_single', ['aerolineas' => $aerolineas]);
+        return view('clientes.show');
+        
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit($id)
     {
-        $aerolineas = Aerolineas::find($id);
-        return view('aerolineas.edit', ['aerolineas' => $aerolineas]);
+        $aeroli = Aerolinea::find($id);
+        return view('aerolineas.edit', ['aeroli'=>$aeroli,'aerolinea' => Aerolinea::all()]);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id_aerolinea)
     {
-        $request->validate([
-            'nombre' => 'required',
-            // otros campos de validación
-        ]);
+        $request->validate ([
+            'nombre'=> 'required',
+                'pais'=> 'required',
+                'direccion_de_ubicacion'=> 'required',
+             ]);
+             
+        $aeroli = Aerolinea::find($id_aerolinea);
 
-        $aerolineas = Aerolineas::find($id);
-        $aerolineas->update($request->all());
-        return redirect('aerolineas');
+        $aeroli->nombre=$request->input('nombre');$aeroli->pais=$request->input('pais');$aeroli->direccion_de_ubicacion=$request->input('direccion_de_ubicacion');
+
+       $aeroli->save();
+       return redirect("aerolineas");
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id_aerolinea)
     {
-        $aerolineas = Aerolineas::find($id);
-        $aerolineas->delete();
-        return redirect('aerolineas');
+        $aeroli= Aerolinea::find($id_aerolinea);
+        $aeroli->delete();
+        
+        return redirect("aerolineas");
     }
 }

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
+use App\Models\Avion;
+use App\Models\Aerolinea;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -11,56 +12,95 @@ class ClienteController extends Controller
     {
         $this->middleware('auth');
     }
-
-    public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
     {
-        $clientes = Cliente::all();
-        return view('clientes.show', ['clientes' => $clientes]);
+        $cliente=Cliente::with('Cliente')
+            ->select('id_cliente','nombre','correo','telefono','fecha_registro')
+            ->orderBy('id_avion','desc')
+            ->get();
+            
+            return view('aviones.show',['avion' => $avion]);
+        
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('clientes.create');
+        return view('aviones.create',['aerolineas' => Aerolinea::all()]);
+        
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required',
-            // otros campos de validación
-        ]);
+        $request->validate ([
+            'id_aerolineas'=> 'required',
+                'modelo'=> 'required',
+                'capacidad'=> 'required',
+             ]);
+             
+        $avion = new Avion();
 
-        Cliente::create($request->all());
-        return redirect('clientes');
+        $avion->id_aerolineas=$request->input('id_aerolineas');$avion->modelo=$request->input('modelo');$avion->capacidad=$request->input('capacidad');
+
+
+       $avion->save();
+       return redirect("aviones");
     }
 
-    public function show(Cliente $cliente)
+    /**
+     * Display the specified resource.
+     */
+    public function show()
     {
-        return view('clientes.show_single', ['cliente' => $cliente]);
+        return view('aviones.show');
+        
     }
 
-    public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id_avion)
     {
-        $cliente = Cliente::find($id);
-        return view('clientes.edit', ['cliente' => $cliente]);
+        $avion = Avion::find($id_avion);
+        return view('aviones.edit', ['avion'=>$avion,'aerolineas' => Aerolinea::all()]);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id_avion)
     {
-        $request->validate([
-            'nombre' => 'required',
-            // otros campos de validación
-        ]);
+        $request->validate ([
+            'id_aerolineas'=> 'required',
+                'modelo'=> 'required',
+                'capacidad'=> 'required',
+             ]);
+             
+        $avion = Avion::find($id_avion);
 
-        $cliente = Cliente::find($id);
-        $cliente->update($request->all());
-        return redirect('clientes');
+        $avion->id_aerolineas=$request->input('id_aerolineas');$avion->modelo=$request->input('modelo');$avion->capacidad=$request->input('capacidad');
+
+
+       $avion->save();
+       return redirect("aviones");
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id_avion)
     {
-        $cliente = Cliente::find($id);
-        $cliente->delete();
-        return redirect('clientes');
+        $avion= Avion::find($id_avion);
+        $avion->delete();
+        
+        return redirect("aviones");
     }
 }

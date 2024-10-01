@@ -10,8 +10,7 @@
         </div>
          <div class="card-body">
         <blockquote class="blockquote mb-10">
-            <h2>Bienvenido: {{ Auth::user()->name }}</h2>
-            <img src="{{ asset('img/logo1.png') }}" class="card-img-top" alt="PE" style="max-width: 30%; height: auto;">
+            <h2>bienvenido</h2>
         </div>
         </blockquote>
         </div>

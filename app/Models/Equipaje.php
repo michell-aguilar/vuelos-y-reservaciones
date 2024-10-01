@@ -1,71 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Equipaje;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class EquipajeController extends Controller
+class Equipaje extends Model
 {
-    public function __construct()
+    use HasFactory;
+    
+    protected $table = 'equipajes'; 
+    protected $primaryKey = 'id_equipaje'; 
+    protected $fillable = ['id_reservacion', 'peso', 'dimensiones', 'tipo']; 
+
+    public function reservacion()
     {
-        $this->middleware('auth');
-    }
-
-    public function index()
-    {
-        $equipajes = DB::table('equipaje')->get();
-        return view('equipaje.show', ['equipajes' => $equipajes]);
-    }
-
-    public function create()
-    {
-        return view('equipaje.create');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tipo' => 'required|string|max:255',
-            'peso' => 'required|numeric|min:0',
-            'dimensiones' => 'required|string|max:255',
-            'id_reservacion' => 'required|exists:reservaciones,id_reservacion',
-        ]);
-
-        Equipaje::create($request->all());
-        return redirect()->route('equipaje.index')->with('success', 'Equipaje creado con éxito.');
-    }
-
-    public function show(Equipaje $equipaje)
-    {
-        return view('equipaje.show', compact('equipaje'));
-    }
-
-    public function edit($id)
-    {
-        $equipaje = Equipaje::find($id);
-        return view('equipaje.update', ['equipaje' => $equipaje]);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'tipo' => 'required|string|max:255',
-            'peso' => 'required|numeric|min:0',
-            'dimensiones' => 'required|string|max:255',
-            'id_reservacion' => 'required|exists:reservaciones,id_reservacion',
-        ]);
-
-        $equipaje = Equipaje::find($id);
-        $equipaje->update($request->all());
-        return redirect()->route('equipaje.index')->with('success', 'Equipaje actualizado con éxito.');
-    }
-
-    public function destroy($id)
-    {
-        $equipaje = Equipaje::find($id);
-        $equipaje->delete();
-        return redirect()->route('equipaje.index')->with('success', 'Equipaje eliminado con éxito.');
+        return $this->belongsTo(Reservacion::class, 'id_reservacion');
     }
 }

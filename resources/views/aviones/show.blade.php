@@ -28,7 +28,7 @@
                     </tr>
                   </thead>
           <tbody class="table-group-divider">
-                @foreach ($aviones as $avion)
+                @foreach ($avion as $avion)
                    <tr>
                     <th scope="row">{{ $avion->id_avion }}</th>
                     <td>{{ $avion->modelo }}</td>
