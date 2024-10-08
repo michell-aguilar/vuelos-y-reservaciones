@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aerolinea;
-use App\Models\Clientes;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,13 +19,10 @@ class AerolineaController extends Controller
      */
     public function index(Request $request)
     {
-        $aeroli=DB::table('aerolinea')
-            ->select(
-                'id_aerolinea','nombre','pais','direccion_de_ubicacion')
-            ->orderBy('id','desc')
-            ->get();
+        $aeroli = Aerolinea::orderBy('id_aerolinea', 'desc')->get();
+        return view('aerolineas.show', ['aeroli' => $aeroli]);
         
-        return view('aerolineas.show',['aeroli' => $aeroli]);
+        
         
     }
 
@@ -51,7 +48,9 @@ class AerolineaController extends Controller
              
         $aeroli = new Aerolinea();
 
-        $aeroli->nombre=$request->input('nombre');$aeroli->pais=$request->input('pais');$aeroli->direccion_de_ubicacion=$request->input('direccion_de_ubicacion');
+        $aeroli->nombre=$request->input('nombre');
+        $aeroli->pais=$request->input('pais');
+        $aeroli->direccion_de_ubicacion=$request->input('direccion_de_ubicacion');
 
        $aeroli->save();
        return redirect("aerolineas");

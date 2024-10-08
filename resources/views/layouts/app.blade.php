@@ -88,7 +88,7 @@
                                   </div>
                                   <div class="col-sm-4">
                                     <li class="nav-item">
-                                      <a class="nav-link" href="/aerolineas"><i class="bi bi-airplane-fill" style="font-size: 2rem; color: rgb(255, 0, 204)"></i><h5>Aerolineas</h5></a>
+                                      <a class="nav-link" href="/aerolinea"><i class="bi bi-airplane-fill" style="font-size: 2rem; color: rgb(255, 0, 204)"></i><h5>Aerolineas</h5></a>
                                     </li>
                                   </div>
                                   <div class="col-sm-4">

@@ -1,32 +1,20 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models;
 
-return new class extends Migration
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Avion extends Model
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    use HasFactory;
+
+    protected $table = 'aviones';
+    protected $primaryKey = 'id_avion';
+    protected $fillable = ['modelo', 'capacidad', 'id_aerolinea'];
+
+    public function aerolinea()
     {
-        Schema::create('aviones', function (Blueprint $table) {
-            $table->id('id_avion'); // Clave primaria
-            $table->unsignedBigInteger('id_aerolinea'); // Clave foránea para aerolíneas
-            $table->string('modelo'); 
-            $table->integer('capacidad'); 
-    
-            //Relación
-            $table->foreign('id_aerolinea')->references('id_aerolinea')->on('aerolineas')->onDelete('cascade');
-        });
+        return $this->belongsTo(Aerolinea::class, 'id_aerolinea');
     }
-    
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('aviones');
-    }
-};
+}

@@ -9,7 +9,7 @@
             <div class="card border-info py-3 px-4" style="width: 45rem;">
                 
                 <div class="card-header text-center">
-                    <img src="{{ asset('img/logo1.png') }}" class="card-img-top" alt="PE" style="max-width: 15%; height: auto;">
+                    
                     <h1><b>{{ __('Inicio de Sesión') }}</b></h1>
                 </div>
                 <div class="card-body">

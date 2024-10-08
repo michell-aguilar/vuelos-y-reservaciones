@@ -10,7 +10,7 @@
         </div>
          <div class="card-body">
         <blockquote class="blockquote mb-10">
-            <h2>bienvenido</h2>
+            <h2>Bienvenidos </h2>
         </div>
         </blockquote>
         </div>

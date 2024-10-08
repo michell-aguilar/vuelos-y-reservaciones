@@ -4,73 +4,89 @@
 @section('content')
 <hr>
 <br>
+<div class="container mt-4">
     <div class="card border-info mx-auto p-2" style="width: 95%;">
-        <div class="card header p-3 bg-info bg-opacity-10 border border-info border-start-0 rounded-end">
-         <h2 class="text-center">
-            <b>
-                CLIENTES
-            </b>
-         </h2>
+        <div class="card-header p-3" style="background-color: #ffcccb; border-color: #ff99cc;" class="border border-info rounded-end">
+            <h2 class="text-center text-info">CLIENTES</h2>
         </div>
         <div class="card-body">
-          <h4 class="card-title">Detalles de los clientes registrados.</h4>
-          <div class="text-end">
-           <br>
-            <hr>
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
+            <h4 class="card-title">Detalles de los clientes registrados.</h4>
+            <div class="text-end mb-3">
+                <a href="{{ url('clientes/create') }}" class="btn btn-success">Agregar Nuevo Cliente</a>
+            </div>
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-light">
                     <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">NOMBRE</th>
-                      <th scope="col">CORREO</th>
-                      <th scope="col">TELÉFONO</th>
-                      <th scope="col">FECHA DE REGISTRO</th>
-                      <th scope="col">ACCIONES</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">CORREO</th>
+                        <th scope="col">TELÉFONO</th>
+                        <th scope="col">ACCIONES</th>
                     </tr>
-                  </thead>
-          <tbody class="table-group-divider">
-                @foreach ($clientes as $cliente)
-                   <tr>
-                    <th scope="row">{{ $cliente->id_cliente }}</th>
-                    <td>{{ $cliente->nombre }}</td>
-                    <td>{{ $cliente->correo }}</td>
-                    <td>{{ $cliente->telefono }}</td>
-                    <td>{{ \Carbon\Carbon::parse($cliente->fecha_registro)->format('d-m-Y') }}</td>
-                    <td>
-                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{{ url('clientes/' . $cliente->id_cliente . '/edit') }}" class="btn" data-bs-toggle="tooltip" data-bs-placement="left" title="Editar">
-                            <i class="bi bi-pencil-square" style="color: blue; font-size: 1.5rem"></i>
-                        </a>
-                        <!-- Botón de Eliminación con Confirmación -->
-                        <button type="button" class="btn" onclick="openDeleteModal1({{ $cliente->id_cliente }})" data-bs-toggle="tooltip" data-bs-placement="left" title="Eliminar">
-                            <i class="bi bi-trash3" style="font-size: 1.5rem; color: red"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                @endforeach
-          </tbody> 
-      </table>
-      </div>
-      </div>  
-      </div>
-  @endsection
+                </thead>
+                <tbody>
+                    @foreach ($clientes as $cliente)
+                        <tr>
+                            <th scope="row">{{ $cliente->id_cliente }}</th>
+                            <td>{{ $cliente->nombre }}</td>
+                            <td>{{ $cliente->correo }}</td>
+                            <td>{{ $cliente->telefono }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <a href="{{ url('clientes/' . $cliente->id_cliente . '/edit') }}" class="btn btn-primary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger" onclick="openDeleteModal1({{ $cliente->id_cliente }})" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
 
-  @section('modal')
+@section('modal')
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este cliente?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="delete-form" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
 
-  @endsection
-
-      <script>
-        function openDeleteModal1(id) {
+<script>
+    function openDeleteModal1(id) {
         var form = document.getElementById('delete-form');
         form.action = 'clientes/' + id;
         var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
         myModal.show();
-        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-      });
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
     });
-    </script>
+</script>
