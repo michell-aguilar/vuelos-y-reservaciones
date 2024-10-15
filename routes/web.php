@@ -11,6 +11,8 @@ use App\Http\Controllers\AvionController;
 use App\Http\Controllers\EquipajeController;
 use App\Http\Controllers\PagoController;
 
+
+
 Route::get('/home', function () { return view('home');
 })->middleware('auth');
 
@@ -29,6 +31,8 @@ Route::resource('/aerolineas', AerolineaController::class);
 Route::resource('/aviones', AvionController::class);
 
 Route::resource('/equipajes', EquipajeController::class);
+
+
 
 Auth::routes();
 

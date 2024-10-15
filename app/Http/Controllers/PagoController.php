@@ -12,9 +12,9 @@ class PagoController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $pagos = Pago::orderBy('id_pago', 'desc')->get();
+        $pagos = Pago::all();
         return view('pagos.show', ['pagos' => $pagos]);
     }
 
@@ -26,59 +26,41 @@ class PagoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_reservacion' => 'required',
-            'monto' => 'required|numeric',
-            'fecha_pago' => 'required|date',
-            'metodo_pago' => 'required|string',
+            'monto' => 'required',
+            // otros campos de validación
         ]);
 
-        $pago = new Pago();
-        $pago->id_reservacion = $request->input('id_reservacion');
-        $pago->monto = $request->input('monto');
-        $pago->fecha_pago = $request->input('fecha_pago');
-        $pago->metodo_pago = $request->input('metodo_pago');
-
-        $pago->save();
-        return redirect("pagos");
+        Pago::create($request->all());
+        return redirect('pagos');
     }
 
-    public function show($id_pago)
+    public function show(Pago $pago)
     {
-        $pago = Pago::find($id_pago);
-        return view('pagos.show', ['pago' => $pago]);
+        return view('pagos.show_single', ['pago' => $pago]);
     }
 
-    public function edit($id_pago)
+    public function edit($id)
     {
-        $pago = Pago::find($id_pago);
+        $pago = Pago::find($id);
         return view('pagos.edit', ['pago' => $pago]);
     }
 
-    
-    public function update(Request $request, $id_pago)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'id_reservacion' => 'required',
-            'monto' => 'required|numeric',
-            'fecha_pago' => 'required|date',
-            'metodo_pago' => 'required|string',
+            'monto' => 'required',
+            // otros campos de validación
         ]);
 
-        $pago = Pago::find($id_pago);
-        $pago->id_reservacion = $request->input('id_reservacion');
-        $pago->monto = $request->input('monto');
-        $pago->fecha_pago = $request->input('fecha_pago');
-        $pago->metodo_pago = $request->input('metodo_pago');
-
-        $pago->save();
-        return redirect("pagos");
+        $pago = Pago::find($id);
+        $pago->update($request->all());
+        return redirect('pagos');
     }
 
-    public function destroy($id_pago)
+    public function destroy($id)
     {
-        $pago = Pago::find($id_pago);
+        $pago = Pago::find($id);
         $pago->delete();
-
-        return redirect("pagos");
+        return redirect('pagos');
     }
 }

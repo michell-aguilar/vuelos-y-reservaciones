@@ -13,6 +13,8 @@
         <h4 class="card-title">Detalles de los aviones registrados.</h4>
         <div class="text-end mb-3">
             <a href="{{ url('aviones/create') }}" class="btn btn-success">Agregar Nuevo Avión</a>
+            <a href="{{ url('aviones/create') }}" class="btn btn-success">hhh</a>
+
         </div>
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-light">

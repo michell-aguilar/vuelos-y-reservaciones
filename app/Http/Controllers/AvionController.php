@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Avion;
-use App\Models\Aerolinea;
 use Illuminate\Http\Request;
 
 class AvionController extends Controller
@@ -12,95 +11,56 @@ class AvionController extends Controller
     {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+
+    public function index()
     {
-        $avion=Avion::with('Aerolineas')
-            ->select('id_avion','id_aerolinea','modelo','capacidad')
-            ->orderBy('id_avion','desc')
-            ->get();
-            
-            return view('aviones.show',['avion' => $avion]);
-        
+        $aviones = Avion::all();
+        return view('aviones.show', ['aviones' => $aviones]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('aviones.create',['aerolineas' => Aerolinea::all()]);
-        
+        return view('aviones.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate ([
-            'id_aerolineas'=> 'required',
-                'modelo'=> 'required',
-                'capacidad'=> 'required',
-             ]);
-             
-        $avion = new Avion();
+        $request->validate([
+            'modelo' => 'required',
+            // otros campos de validación
+        ]);
 
-        $avion->id_aerolineas=$request->input('id_aerolineas');$avion->modelo=$request->input('modelo');$avion->capacidad=$request->input('capacidad');
-
-
-       $avion->save();
-       return redirect("aviones");
+        Avion::create($request->all());
+        return redirect('aviones');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    public function show(Avion $avion)
     {
-        return view('aviones.show');
-        
+        return view('aviones.show_single', ['avion' => $avion]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id_avion)
+    public function edit($id)
     {
-        $avion = Avion::find($id_avion);
-        return view('aviones.edit', ['avion'=>$avion,'aerolineas' => Aerolinea::all()]);
+        $avion = Avion::find($id);
+        return view('aviones.edit', ['avion' => $avion]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id_avion)
+    public function update(Request $request, $id)
     {
-        $request->validate ([
-            'id_aerolineas'=> 'required',
-                'modelo'=> 'required',
-                'capacidad'=> 'required',
-             ]);
-             
-        $avion = Avion::find($id_avion);
+        $request->validate([
+            'modelo' => 'required',
+            // otros campos de validación
+        ]);
 
-        $avion->id_aerolineas=$request->input('id_aerolineas');$avion->modelo=$request->input('modelo');$avion->capacidad=$request->input('capacidad');
-
-
-       $avion->save();
-       return redirect("aviones");
+        $avion = Avion::find($id);
+        $avion->update($request->all());
+        return redirect('aviones');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id_avion)
+    public function destroy($id)
     {
-        $avion= Avion::find($id_avion);
+        $avion = Avion::find($id);
         $avion->delete();
-        
-        return redirect("aviones");
+        return redirect('aviones');
     }
 }

@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
 {
     Schema::create('equipajes', function (Blueprint $table) {
-        $table->id('id_equipaje'); // Clave primaria
-        $table->unsignedBigInteger('id_cliente'); // Clave foránea a cliente
-        $table->unsignedBigInteger('id_vuelo'); // Clave foránea a vuelo
+        $table->id('id_equipaje'); 
+        $table->unsignedBigInteger('id_cliente'); 
+        $table->unsignedBigInteger('id_vuelo'); 
         $table->decimal('peso', 8, 2); 
-        $table->string('dimensiones', 100); // Dimensiones del equipaje
+        $table->string('dimensiones', 100); 
         $table->integer('cantidad'); 
-        $table->enum('tipo', ['equipaje en mano', 'equipaje facturado']); // Tipo de equipaje
+        $table->enum('tipo', ['equipaje en mano', 'equipaje facturado']);
         // relaciones
         $table->foreign('id_cliente')->references('id_cliente')->on('clientes')->onDelete('cascade');
         $table->foreign('id_vuelo')->references('id_vuelo')->on('vuelos')->onDelete('cascade');

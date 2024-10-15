@@ -2,119 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reservacion;
-use App\Models\Vuelo;
-use App\Models\Cliente;
+use App\Models\Reservaciones;
 use Illuminate\Http\Request;
 
-class ReservacionController extends Controller
+class ReservacionesController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    public function index()
     {
-        $reservaciones = Reservacion::with('vuelo', 'cliente')
-            ->orderBy('id_reservacion', 'desc')
-            ->get();
-
+        $reservaciones = Reservaciones::all();
         return view('reservaciones.show', ['reservaciones' => $reservaciones]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('reservaciones.create', [
-            'vuelos' => Vuelo::all(),
-            'clientes' => Cliente::all(),
-        ]);
+        return view('reservaciones.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'id_cliente' => 'required',
-            'id_vuelo' => 'required',
-            'cantidad_asientos' => 'required|integer|min:1',
-            'fecha_reservacion' => 'required|date',
-            'estado_reservacion' => 'required|string',
+            'fecha' => 'required',
+            // otros campos de validación
         ]);
 
-        $reservacion = new Reservacion();
-        $reservacion->id_cliente = $request->input('id_cliente');
-        $reservacion->id_vuelo = $request->input('id_vuelo');
-        $reservacion->cantidad_asientos = $request->input('cantidad_asientos');
-        $reservacion->fecha_reservacion = $request->input('fecha_reservacion');
-        $reservacion->estado_reservacion = $request->input('estado_reservacion');
-
-        $reservacion->save();
-        return redirect("reservaciones");
+        Reservaciones::create($request->all());
+        return redirect('reservaciones');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id_reservacion)
+    public function show(Reservaciones $reservacion)
     {
-        $reservacion = Reservacion::with('vuelo', 'cliente')->find($id_reservacion);
-        return view('reservaciones.show', ['reservacion' => $reservacion]);
+        return view('reservaciones.show_single', ['reservacion' => $reservacion]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id_reservacion)
+    public function edit($id)
     {
-        $reservacion = Reservacion::find($id_reservacion);
-        return view('reservaciones.edit', [
-            'reservacion' => $reservacion,
-            'vuelos' => Vuelo::all(),
-            'clientes' => Cliente::all(),
-        ]);
+        $reservacion = Reservaciones::find($id);
+        return view('reservaciones.edit', ['reservacion' => $reservacion]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id_reservacion)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'id_cliente' => 'required',
-            'id_vuelo' => 'required',
-            'cantidad_asientos' => 'required|integer|min:1',
-            'fecha_reservacion' => 'required|date',
-            'estado_reservacion' => 'required|string',
+            'fecha' => 'required',
+            // otros campos de validación
         ]);
 
-        $reservacion = Reservacion::find($id_reservacion);
-        $reservacion->id_cliente = $request->input('id_cliente');
-        $reservacion->id_vuelo = $request->input('id_vuelo');
-        $reservacion->cantidad_asientos = $request->input('cantidad_asientos');
-        $reservacion->fecha_reservacion = $request->input('fecha_reservacion');
-        $reservacion->estado_reservacion = $request->input('estado_reservacion');
-
-        $reservacion->save();
-        return redirect("reservaciones");
+        $reservacion = Reservaciones::find($id);
+        $reservacion->update($request->all());
+        return redirect('reservaciones');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id_reservacion)
+    public function destroy($id)
     {
-        $reservacion = Reservacion::find($id_reservacion);
+        $reservacion = Reservaciones::find($id);
         $reservacion->delete();
-
-        return redirect("reservaciones");
+        return redirect('reservaciones');
     }
 }

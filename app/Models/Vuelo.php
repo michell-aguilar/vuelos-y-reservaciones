@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vuelo extends Model
+class Avion extends Model
 {
-    use HasFactory;
+    protected $table = 'aviones';
+    protected $fillable = ['modelo', 'capacidad', 'id_aerolinea'];
 
-    protected $table = 'vuelos'; 
-    protected $primaryKey = 'id_vuelo'; 
-    protected $fillable = ['origen', 'destino', 'fecha_salida', 'hora_salida', 'fecha_llegada', 'hora_llegada', 'precio', 'estado_vuelo']; 
-
-    public function reservaciones()
+    public function aerolinea()
     {
-        return $this->hasMany(Reservacion::class, 'id_vuelo');
+        return $this->belongsTo(Aerolinea::class, 'id_aerolinea');
+    }
+
+    public function vuelos()
+    {
+        return $this->hasMany(Vuelo::class, 'id_avion');
     }
 }

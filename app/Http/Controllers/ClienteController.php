@@ -12,9 +12,9 @@ class ClienteController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $clientes = Cliente::orderBy('id_cliente', 'desc')->get();
+        $clientes = Cliente::all();
         return view('clientes.show', ['clientes' => $clientes]);
     }
 
@@ -27,57 +27,40 @@ class ClienteController extends Controller
     {
         $request->validate([
             'nombre' => 'required',
-            'correo' => 'required|email',
-            'telefono' => 'required',
-            'fecha_registro' => 'required|date',
+            // otros campos de validación
         ]);
 
-        $cliente = new Cliente();
-        $cliente->nombre = $request->input('nombre');
-        $cliente->correo = $request->input('correo');
-        $cliente->telefono = $request->input('telefono');
-        $cliente->fecha_registro = $request->input('fecha_registro');
-        
-        $cliente->save();
-        return redirect("clientes");
+        Cliente::create($request->all());
+        return redirect('clientes');
     }
 
-    public function show($id_cliente)
+    public function show(Cliente $cliente)
     {
-        $cliente = Cliente::find($id_cliente);
-        return view('clientes.show', ['cliente' => $cliente]);
+        return view('clientes.show_single', ['cliente' => $cliente]);
     }
 
-    public function edit($id_cliente)
+    public function edit($id)
     {
-        $cliente = Cliente::find($id_cliente);
+        $cliente = Cliente::find($id);
         return view('clientes.edit', ['cliente' => $cliente]);
     }
 
-    public function update(Request $request, $id_cliente)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'nombre' => 'required',
-            'correo' => 'required|email',
-            'telefono' => 'required',
-            'fecha_registro' => 'required|date',
+            // otros campos de validación
         ]);
 
-        $cliente = Cliente::find($id_cliente);
-        $cliente->nombre = $request->input('nombre');
-        $cliente->correo = $request->input('correo');
-        $cliente->telefono = $request->input('telefono');
-        $cliente->fecha_registro = $request->input('fecha_registro');
-        
-        $cliente->save();
-        return redirect("clientes");
+        $cliente = Cliente::find($id);
+        $cliente->update($request->all());
+        return redirect('clientes');
     }
 
-    public function destroy($id_cliente)
+    public function destroy($id)
     {
-        $cliente = Cliente::find($id_cliente);
+        $cliente = Cliente::find($id);
         $cliente->delete();
-        
-        return redirect("clientes");
+        return redirect('clientes');
     }
 }

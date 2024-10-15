@@ -1,110 +1,40 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $usuarios = DB::table('usuarios')
-        ->select('id_usuario', 'nombre', 'correo', 'telefono', 'fecha_registro')
-            ->orderBy('id_usuario', 'desc')
-            ->get();
-
-        return view('usuarios.show', ['usuarios' => $usuarios]);
+        $usuarios = Usuario::all();
+        return response()->json($usuarios);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        return view('usuarios.create');
+        $usuario = Usuario::find($id);
+        return response()->json($usuario);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required',
-            'correo' => 'required|email',
-            'teléfono' => 'required',
-        ]);
-
-        $usuario = new Usuario();
-
-        $usuario->nombre = $request->input('nombre');
-        $usuario->correo = $request->input('correo');
-        $usuario->teléfono = $request->input('teléfono');
-        $usuario->fecha_registro = now();
-
-        $usuario->save();
-
-        return redirect("usuarios");
+        $usuario = Usuario::create($request->all());
+        return response()->json($usuario, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id_usuario)
+    public function update(Request $request, $id)
     {
-        $usuario = Usuario::find($id_usuario);
-        return view('usuarios.show', ['usuario' => $usuario]);
+        $usuario = Usuario::find($id);
+        $usuario->update($request->all());
+        return response()->json($usuario);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id_usuario)
+    public function destroy($id)
     {
-        $usuario = Usuario::find($id_usuario);
-        return view('usuarios.edit', ['usuario' => $usuario]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id_usuario)
-    {
-        $request->validate([
-            'nombre' => 'required',
-            'correo' => 'required|email',
-            'teléfono' => 'required',
-        ]);
-
-        $usuario = Usuario::find($id_usuario);
-
-        $usuario->nombre = $request->input('nombre');
-        $usuario->correo = $request->input('correo');
-        $usuario->teléfono = $request->input('teléfono');
-
-        $usuario->save();
-
-        return redirect("usuarios");
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id_usuario)
-    {
-        $usuario = Usuario::find($id_usuario);
-        $usuario->delete();
-
-        return redirect("usuarios");
+        Usuario::destroy($id);
+        return response()->json(null, 204);
     }
 }
