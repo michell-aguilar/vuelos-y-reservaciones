@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Aerolinea extends Model
 {
     use HasFactory;
+
     protected $table = 'aerolineas';
     protected $primaryKey = 'id_aerolinea';
-    protected $fillable = ['nombre','pais','direccion_de_ubicacion'];
+    protected $fillable = ['nombre', 'pais', 'direccion_ubicacion'];
 
-    public function Avion()
+    public function aviones()
     {
-        return $this->belongsTo(Avion::class, 'id_aerolinea');
+        return $this->hasMany(Avion::class, 'id_aerolinea');
     }
-
 }

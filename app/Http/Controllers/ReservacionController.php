@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reservaciones;
+use App\Models\Reservacion;
 use Illuminate\Http\Request;
 
-class ReservacionesController extends Controller
+class ReservacionController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        $reservaciones = Reservaciones::all();
-        return view('reservaciones.show', ['reservaciones' => $reservaciones]);
+        $reservaciones = Reservacion::with('usuario', 'vuelo')->get();
+        return view('reservaciones.show')->with(['reservaciones' => $reservaciones]);
     }
 
     public function create()
@@ -25,42 +20,45 @@ class ReservacionesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'fecha' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'id_usuario' => 'required|exists:usuarios,id_usuario',
+            'id_vuelo' => 'required|exists:vuelos,id_vuelo',
+            'cantidad_asientos' => 'required|integer',
+            'fecha_reservacion' => 'required|date',
+            'estado_reservacion' => 'required|string',
         ]);
 
-        Reservaciones::create($request->all());
-        return redirect('reservaciones');
+        Reservacion::create($data);
+        return redirect('/reservaciones/show');
     }
 
-    public function show(Reservaciones $reservacion)
+    public function show(Reservacion $reservacion)
     {
-        return view('reservaciones.show_single', ['reservacion' => $reservacion]);
+        return view('reservaciones.show_single')->with(['reservacion' => $reservacion]);
     }
 
-    public function edit($id)
+    public function edit(Reservacion $reservacion)
     {
-        $reservacion = Reservaciones::find($id);
-        return view('reservaciones.edit', ['reservacion' => $reservacion]);
+        return view('reservaciones.edit')->with(['reservacion' => $reservacion]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Reservacion $reservacion)
     {
-        $request->validate([
-            'fecha' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'id_usuario' => 'required|exists:usuarios,id_usuario',
+            'id_vuelo' => 'required|exists:vuelos,id_vuelo',
+            'cantidad_asientos' => 'required|integer',
+            'fecha_reservacion' => 'required|date',
+            'estado_reservacion' => 'required|string',
         ]);
 
-        $reservacion = Reservaciones::find($id);
-        $reservacion->update($request->all());
-        return redirect('reservaciones');
+        $reservacion->update($data);
+        return redirect('/reservaciones/show');
     }
 
-    public function destroy($id)
+    public function destroy(Reservacion $reservacion)
     {
-        $reservacion = Reservaciones::find($id);
         $reservacion->delete();
-        return redirect('reservaciones');
+        return response()->json(['res' => true]);
     }
 }

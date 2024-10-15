@@ -7,15 +7,10 @@ use Illuminate\Http\Request;
 
 class PagoController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        $pagos = Pago::all();
-        return view('pagos.show', ['pagos' => $pagos]);
+        $pagos = Pago::with('reservacion')->get();
+        return view('pagos.show')->with(['pagos' => $pagos]);
     }
 
     public function create()
@@ -25,42 +20,43 @@ class PagoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'monto' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'id_reservacion' => 'required|exists:reservaciones,id_reservacion',
+            'monto' => 'required|decimal',
+            'fecha_pago' => 'required|date',
+            'metodo_pago' => 'required|string',
         ]);
 
-        Pago::create($request->all());
-        return redirect('pagos');
+        Pago::create($data);
+        return redirect('/pagos/show');
     }
 
     public function show(Pago $pago)
     {
-        return view('pagos.show_single', ['pago' => $pago]);
+        return view('pagos.show_single')->with(['pago' => $pago]);
     }
 
-    public function edit($id)
+    public function edit(Pago $pago)
     {
-        $pago = Pago::find($id);
-        return view('pagos.edit', ['pago' => $pago]);
+        return view('pagos.edit')->with(['pago' => $pago]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Pago $pago)
     {
-        $request->validate([
-            'monto' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'id_reservacion' => 'required|exists:reservaciones,id_reservacion',
+            'monto' => 'required|decimal',
+            'fecha_pago' => 'required|date',
+            'metodo_pago' => 'required|string',
         ]);
 
-        $pago = Pago::find($id);
-        $pago->update($request->all());
-        return redirect('pagos');
+        $pago->update($data);
+        return redirect('/pagos/show');
     }
 
-    public function destroy($id)
+    public function destroy(Pago $pago)
     {
-        $pago = Pago::find($id);
         $pago->delete();
-        return redirect('pagos');
+        return response()->json(['res' => true]);
     }
 }

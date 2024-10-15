@@ -7,15 +7,10 @@ use Illuminate\Http\Request;
 
 class AvionController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        $aviones = Avion::all();
-        return view('aviones.show', ['aviones' => $aviones]);
+        $aviones = Avion::with('aerolinea')->get();
+        return view('aviones.show')->with(['aviones' => $aviones]);
     }
 
     public function create()
@@ -25,42 +20,41 @@ class AvionController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'modelo' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'modelo' => 'required|string',
+            'capacidad' => 'required|integer',
+            'id_aerolinea' => 'required|exists:aerolineas,id_aerolinea',
         ]);
 
-        Avion::create($request->all());
-        return redirect('aviones');
+        Avion::create($data);
+        return redirect('/aviones/show');
     }
 
     public function show(Avion $avion)
     {
-        return view('aviones.show_single', ['avion' => $avion]);
+        return view('aviones.show_single')->with(['avion' => $avion]);
     }
 
-    public function edit($id)
+    public function edit(Avion $avion)
     {
-        $avion = Avion::find($id);
-        return view('aviones.edit', ['avion' => $avion]);
+        return view('aviones.edit')->with(['avion' => $avion]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Avion $avion)
     {
-        $request->validate([
-            'modelo' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'modelo' => 'required|string',
+            'capacidad' => 'required|integer',
+            'id_aerolinea' => 'required|exists:aerolineas,id_aerolinea',
         ]);
 
-        $avion = Avion::find($id);
-        $avion->update($request->all());
-        return redirect('aviones');
+        $avion->update($data);
+        return redirect('/aviones/show');
     }
 
-    public function destroy($id)
+    public function destroy(Avion $avion)
     {
-        $avion = Avion::find($id);
         $avion->delete();
-        return redirect('aviones');
+        return response()->json(['res' => true]);
     }
 }

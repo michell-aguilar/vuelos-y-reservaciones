@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -10,31 +10,61 @@ class VueloController extends Controller
     public function index()
     {
         $vuelos = Vuelo::all();
-        return response()->json($vuelos);
+        return view('vuelos.show')->with(['vuelos' => $vuelos]);
     }
 
-    public function show($id)
+    public function create()
     {
-        $vuelo = Vuelo::find($id);
-        return response()->json($vuelo);
+        return view('vuelos.create');
     }
 
     public function store(Request $request)
     {
-        $vuelo = Vuelo::create($request->all());
-        return response()->json($vuelo, 201);
+        $data = request()->validate([
+            'origen' => 'required|string',
+            'destino' => 'required|string',
+            'fecha_salida' => 'required|date',
+            'hora_salida' => 'required|time',
+            'hora_llegada' => 'required|time',
+            'precio' => 'required|decimal',
+            'estado_vuelo' => 'required|string',
+            'clase_de_vuelo' => 'required|string',
+        ]);
+
+        Vuelo::create($data);
+        return redirect('/vuelos/show');
     }
 
-    public function update(Request $request, $id)
+    public function show(Vuelo $vuelo)
     {
-        $vuelo = Vuelo::find($id);
-        $vuelo->update($request->all());
-        return response()->json($vuelo);
+        return view('vuelos.show_single')->with(['vuelo' => $vuelo]);
     }
 
-    public function destroy($id)
+    public function edit(Vuelo $vuelo)
     {
-        Vuelo::destroy($id);
-        return response()->json(null, 204);
+        return view('vuelos.edit')->with(['vuelo' => $vuelo]);
+    }
+
+    public function update(Request $request, Vuelo $vuelo)
+    {
+        $data = request()->validate([
+            'origen' => 'required|string',
+            'destino' => 'required|string',
+            'fecha_salida' => 'required|date',
+            'hora_salida' => 'required|time',
+            'hora_llegada' => 'required|time',
+            'precio' => 'required|decimal',
+            'estado_vuelo' => 'required|string',
+            'clase_de_vuelo' => 'required|string',
+        ]);
+
+        $vuelo->update($data);
+        return redirect('/vuelos/show');
+    }
+
+    public function destroy(Vuelo $vuelo)
+    {
+        $vuelo->delete();
+        return response()->json(['res' => true]);
     }
 }

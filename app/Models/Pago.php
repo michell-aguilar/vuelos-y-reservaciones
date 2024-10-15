@@ -9,11 +9,9 @@ class Pago extends Model
 {
     use HasFactory;
 
-    protected $table = 'pagos'; 
-    protected $primaryKey = 'id_pago'; 
-    protected $foreignKey = 'id_reservacion';
-    protected $fillable = ['monto', 'fecha_pago', 'metodo_pago']; 
-
+    protected $table = 'pagos';
+    protected $primaryKey = 'id_pago';
+    protected $fillable = ['id_reservacion', 'monto', 'fecha_pago', 'metodo_pago'];
 
     public function reservacion()
     {

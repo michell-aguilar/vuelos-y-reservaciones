@@ -9,12 +9,17 @@ class Reservacion extends Model
 {
     use HasFactory;
 
-    protected $table = 'reservaciones'; 
-    protected $primaryKey = 'id_reservacion'; 
-    protected $fillable = ['id_usuario', 'id_vuelo', 'cantidad_asientos', 'fecha_reservacion', 'estado_reservacion' ]; 
+    protected $table = 'reservaciones';
+    protected $primaryKey = 'id_reservacion';
+    protected $fillable = ['id_usuario', 'id_vuelo', 'cantidad_asientos', 'fecha_reservacion', 'estado_reservacion'];
 
-    public function pagos()
+    public function usuario()
     {
-        return $this->hasMany(Pago::class, 'id_reservacion');
+        return $this->belongsTo(Usuario::class, 'id_usuario');
+    }
+
+    public function vuelo()
+    {
+        return $this->belongsTo(Vuelo::class, 'id_vuelo');
     }
 }

@@ -1,53 +1,53 @@
-@extends('layouts.app')
+
+@extends('layout.app')
+
+@section('title', 'Crear Cliente')
 
 @section('content')
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="text-center"><b>Registro de Cliente</b></h2>
-                </div>
-                <div class="card-body">
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    
-                    <form method="POST" action="{{ url('clientes') }}">
-                        @csrf
-                        <div class="form-group mb-3">
-                            <label for="nombre" class="form-label"><h5>Nombre Completo:</h5></label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" maxlength="50" value="{{ old('nombre') }}" required>
-                        </div>
-                    
-                        <div class="form-group mb-3">
-                            <label for="correo" class="form-label"><h5>Correo Electrónico:</h5></label>
-                            <input type="email" class="form-control" id="correo" name="correo" value="{{ old('correo') }}" required>
-                        </div>
-                        
-                        <div class="form-group mb-3">
-                            <label for="telefono" class="form-label"><h5>Teléfono Particular:</h5></label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" value="{{ old('telefono') }}" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="fechaRegistro" class="form-label"><h5>Fecha de Registro:</h5></label>
-                            <input type="date" class="form-control" id="fechaRegistro" name="fecha_registro" value="{{ old('fecha_registro') }}" required>
-                        </div>
-
-                        <div class="text-center">
-                            <button class="btn btn-primary btn-lg" type="submit"><b>Guardar</b></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+<h1>Crear Cliente</h1>
+<h5>Formulario para crear cliente</h5>
+<hr>
+<form class="row g-3" action="{{ route('cliente.store') }}" method="POST">
+    @csrf
+    <div class="col-md-6">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" name="nombre" class="form-control" id="nombre" required>
+        @error('nombre')
+        <span class="invalid-feedback d-block" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
     </div>
-</div>
+    <div class="col-md-6">
+        <label for="correo" class="form-label">Correo</label>
+        <input type="email" name="correo" class="form-control" id="correo" required>
+        @error('correo')
+        <span class="invalid-feedback d-block" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input type="text" name="telefono" class="form-control" id="telefono" required>
+        @error('telefono')
+        <span class="invalid-feedback d-block" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label for="fecha_registro" class="form-label">Fecha de Registro</label>
+        <input type="date" name="fecha_registro" class="form-control" id="fecha_registro" required>
+        @error('fecha_registro')
+        <span class="invalid-feedback d-block" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+<br>
 @endsection

@@ -1,101 +1,47 @@
-@extends('layouts.app')
-@extends('layouts.modal')
+
+@extends('layout.app')
+
+@section('title', 'Aerolineas')
+
 @section('content')
-<hr>
+
+<h5>Tabla de Aerolineas</h5>
 <br>
-<div class="card border-info mx-auto p-2" style="width: 95%;">
-  <div class="card-header p-3" style="background-color: #ffcccb; border-color: #ff99cc;">
-      <h2 class="text-center">
-          <b>
-              AEROLÍNEAS
-          </b>
-      </h2>
-  </div>
-  <div class="card-body">
-      <h4 class="card-title">Detalles de la Aerolínea.</h4>
-      <div class="text-end">
-          <br>
-          <hr>
-          <table class="table table-striped table-hover">
-              <thead class="table-dark">
-                  <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">NOMBRE</th>
-                      <th scope="col">PAÍS</th>
-                      <th scope="col">DIRECCIÓN</th>
-                      <th scope="col">AVIONES</th> 
-                      <th scope="col">ACCIONES</th>
-                  </tr>
-              </thead>
-              <tbody class="table-group-divider">
-                  <tr>
-                      <th scope="row">{{ $aerolinea->id_aerolinea }}</th>
-                      <td>{{ $aerolinea->nombre }}</td>
-                      <td>{{ $aerolinea->pais }}</td>
-                      <td>{{ $aerolinea->direccion_de_ubicacion }}</td>
-                      <td>
-                          <ul>
-                              @foreach ($aerolinea->aviones as $avion)
-                                  <li>{{ $avion->modelo }} (Capacidad: {{ $avion->capacidad }})</li>
-                              @endforeach
-                          </ul>
-                      </td>
-                      <td>
-                          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                              <a href="{{ url('aerolineas/'.$aerolinea->id_aerolinea.'/edit') }}" class="btn" data-bs-toggle="tooltip" data-bs-placement="left" title="Editar">
-                                  <i class="bi bi-pencil-square" style="color: blue; font-size: 1.5rem"></i>
-                              </a>
-                              <!-- Botón de Eliminación con Confirmación -->
-                              <button type="button" class="btn" onclick="openDeleteModal1({{ $aerolinea->id_aerolinea }})" data-bs-toggle="tooltip" data-bs-placement="left" title="Eliminar">
-                                  <i class="bi bi-trash3" style="font-size: 1.5rem; color: red"></i>
-                              </button>
-                          </div>
-                      </td>
-                  </tr>
-              </tbody> 
-          </table>
-      </div>
-  </div>  
-</div>
+<a class="btn btn-danger btn-sm" href="/aerolinea/create">Agregar nueva aerolinea</a>
+
+<hr>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">País</th>
+            <th scope="col">Dirección</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($aerolineas as $item)
+        <tr>
+            <td>{{ $item->id_aerolinea }}</td>
+            <td>{{ $item->nombre }}</td>
+            <td>{{ $item->pais }}</td>
+            <td>{{ $item->direccion_ubicacion }}</td>
+            <td>
+                <a class="btn btn-success btn-sm" href="/aerolinea/edit/{{$item->id_aerolinea}}">Modificar</a>
+                <button class="btn btn-danger btn-sm" url="/aerolinea/destroy/{{$item->id_aerolinea}}" onclick="destroy(this)" token="{{ csrf_token() }}">Eliminar</button>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 
 @endsection
 
-@section('modal')
-<!-- Modal de confirmación para eliminar -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Confirmar Eliminación</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              ¿Estás seguro de que deseas eliminar esta aerolínea?
-          </div>
-          <div class="modal-footer">
-              <form id="delete-form" method="POST" action="">
-                  @csrf
-                  @method('DELETE')
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="submit" class="btn btn-danger">Eliminar</button>
-              </form>
-          </div>
-      </div>
-  </div>
-</div>
+@section('scripts')
+{{-- SweetAlert --}}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- JS --}}
+<script src="{{ asset('js/aerolinea.js') }}"></script>
 @endsection
-
-<script>
-  function openDeleteModal1(id) {
-      var form = document.getElementById('delete-form');
-      form.action = 'aerolineas/' + id;
-      var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-      myModal.show();
-  }
-  document.addEventListener('DOMContentLoaded', function () {
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl);
-      });
-  });
-</script>

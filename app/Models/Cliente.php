@@ -9,12 +9,12 @@ class Cliente extends Model
 {
     use HasFactory;
 
-    protected $table = 'clientes'; 
-    protected $primaryKey = 'id_cliente'; 
+    protected $table = 'clientes';
+    protected $primaryKey = 'id_cliente';
     protected $fillable = ['nombre', 'correo', 'telefono', 'fecha_registro'];
-     
-    public function reservaciones()
+
+    public function equipajes()
     {
-        return $this->hasMany(Reservacion::class, 'id_cliente');
+        return $this->hasMany(Equipaje::class, 'id_cliente');
     }
 }

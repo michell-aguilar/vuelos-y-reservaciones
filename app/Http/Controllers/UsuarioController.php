@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -10,31 +10,53 @@ class UsuarioController extends Controller
     public function index()
     {
         $usuarios = Usuario::all();
-        return response()->json($usuarios);
+        return view('usuarios.show')->with(['usuarios' => $usuarios]);
     }
 
-    public function show($id)
+    public function create()
     {
-        $usuario = Usuario::find($id);
-        return response()->json($usuario);
+        return view('usuarios.create');
     }
 
     public function store(Request $request)
     {
-        $usuario = Usuario::create($request->all());
-        return response()->json($usuario, 201);
+        $data = request()->validate([
+            'nombre' => 'required|string',
+            'correo' => 'required|string|unique:usuarios',
+            'telefono' => 'required|string',
+            'fecha_registro' => 'required|date',
+        ]);
+
+        Usuario::create($data);
+        return redirect('/usuarios/show');
     }
 
-    public function update(Request $request, $id)
+    public function show(Usuario $usuario)
     {
-        $usuario = Usuario::find($id);
-        $usuario->update($request->all());
-        return response()->json($usuario);
+        return view('usuarios.show_single')->with(['usuario' => $usuario]);
     }
 
-    public function destroy($id)
+    public function edit(Usuario $usuario)
     {
-        Usuario::destroy($id);
-        return response()->json(null, 204);
+        return view('usuarios.edit')->with(['usuario' => $usuario]);
+    }
+
+    public function update(Request $request, Usuario $usuario)
+    {
+        $data = request()->validate([
+            'nombre' => 'required|string',
+            'correo' => 'required|string|unique:usuarios,correo,' . $usuario->id_usuario,
+            'telefono' => 'required|string',
+            'fecha_registro' => 'required|date',
+        ]);
+
+        $usuario->update($data);
+        return redirect('/usuarios/show');
+    }
+
+    public function destroy(Usuario $usuario)
+    {
+        $usuario->delete();
+        return response()->json(['res' => true]);
     }
 }

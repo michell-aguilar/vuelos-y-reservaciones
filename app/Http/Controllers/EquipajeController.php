@@ -7,94 +7,60 @@ use Illuminate\Http\Request;
 
 class EquipajeController extends Controller
 {
-    public function __construct()
+    public function index()
     {
-        $this->middleware('auth');
+        $equipajes = Equipaje::with('cliente', 'vuelo')->get();
+        return view('equipajes.show')->with(['equipajes' => $equipajes]);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        $equipajes = Equipaje::orderBy('id_equipaje', 'desc')->get();
-        return view('equipajes.show', ['equipajes' => $equipajes]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('equipajes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'id_cliente' => 'required',
+        $data = request()->validate([
+            'id_cliente' => 'required|exists:clientes,id_cliente',
+            'id_vuelo' => 'required|exists:vuelos,id_vuelo',
             'peso' => 'required|numeric',
-            'descripcion' => 'nullable|string',
+            'dimensiones' => 'required|string',
+            'cantidad' => 'required|integer',
+            'tipo' => 'required|string',
         ]);
 
-        $equipaje = new Equipaje();
-        $equipaje->id_cliente = $request->input('id_cliente');
-        $equipaje->peso = $request->input('peso');
-        $equipaje->descripcion = $request->input('descripcion');
-
-        $equipaje->save();
-        return redirect("equipajes");
+        Equipaje::create($data);
+        return redirect('/equipajes/show');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id_equipaje)
+    public function show(Equipaje $equipaje)
     {
-        $equipaje = Equipaje::find($id_equipaje);
-        return view('equipajes.show', ['equipaje' => $equipaje]);
+        return view('equipajes.show_single')->with(['equipaje' => $equipaje]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id_equipaje)
+    public function edit(Equipaje $equipaje)
     {
-        $equipaje = Equipaje::find($id_equipaje);
-        return view('equipajes.edit', ['equipaje' => $equipaje]);
+        return view('equipajes.edit')->with(['equipaje' => $equipaje]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id_equipaje)
+    public function update(Request $request, Equipaje $equipaje)
     {
-        $request->validate([
-            'id_cliente' => 'required',
+        $data = request()->validate([
+            'id_cliente' => 'required|exists:clientes,id_cliente',
+            'id_vuelo' => 'required|exists:vuelos,id_vuelo',
             'peso' => 'required|numeric',
-            'descripcion' => 'nullable|string',
+            'dimensiones' => 'required|string',
+            'cantidad' => 'required|integer',
+            'tipo' => 'required|string',
         ]);
 
-        $equipaje = Equipaje::find($id_equipaje);
-        $equipaje->id_cliente = $request->input('id_cliente');
-        $equipaje->peso = $request->input('peso');
-        $equipaje->descripcion = $request->input('descripcion');
-
-        $equipaje->save();
-        return redirect("equipajes");
+        $equipaje->update($data);
+        return redirect('/equipajes/show');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id_equipaje)
+    public function destroy(Equipaje $equipaje)
     {
-        $equipaje = Equipaje::find($id_equipaje);
         $equipaje->delete();
-
-        return redirect("equipajes");
+        return response()->json(['res' => true]);
     }
 }

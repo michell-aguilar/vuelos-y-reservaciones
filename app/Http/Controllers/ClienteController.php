@@ -7,15 +7,10 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $clientes = Cliente::all();
-        return view('clientes.show', ['clientes' => $clientes]);
+        return view('clientes.show')->with(['clientes' => $clientes]);
     }
 
     public function create()
@@ -25,42 +20,43 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'nombre' => 'required|string',
+            'correo' => 'required|string|unique:clientes',
+            'telefono' => 'required|string',
+            'fecha_registro' => 'required|date',
         ]);
 
-        Cliente::create($request->all());
-        return redirect('clientes');
+        Cliente::create($data);
+        return redirect('/clientes/show');
     }
 
     public function show(Cliente $cliente)
     {
-        return view('clientes.show_single', ['cliente' => $cliente]);
+        return view('clientes.show_single')->with(['cliente' => $cliente]);
     }
 
-    public function edit($id)
+    public function edit(Cliente $cliente)
     {
-        $cliente = Cliente::find($id);
-        return view('clientes.edit', ['cliente' => $cliente]);
+        return view('clientes.edit')->with(['cliente' => $cliente]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Cliente $cliente)
     {
-        $request->validate([
-            'nombre' => 'required',
-            // otros campos de validación
+        $data = request()->validate([
+            'nombre' => 'required|string',
+            'correo' => 'required|string|unique:clientes,correo,' . $cliente->id_cliente,
+            'telefono' => 'required|string',
+            'fecha_registro' => 'required|date',
         ]);
 
-        $cliente = Cliente::find($id);
-        $cliente->update($request->all());
-        return redirect('clientes');
+        $cliente->update($data);
+        return redirect('/clientes/show');
     }
 
-    public function destroy($id)
+    public function destroy(Cliente $cliente)
     {
-        $cliente = Cliente::find($id);
         $cliente->delete();
-        return redirect('clientes');
+        return response()->json(['res' => true]);
     }
 }
